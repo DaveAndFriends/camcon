@@ -1,12 +1,19 @@
+/**************************************
+ * Camera Control Sender Node
+ * 
+ * Author: Davis Johnson
+ **************************************/
+
 #include <Keypad.h>
 #include <SPI.h>
 #include <LoRa.h>
 #include <SoftwareSerial.h>
 #include <PacketSerial.h>
 
-#define NODE_ID 1 //ID of this node
+//Max number of nodes
+#define MAX_NODES 8
 
-//Lora comm vars
+//Lora pins - do not modify
 #define SCK     15
 #define MISO    14
 #define MOSI    16
@@ -25,26 +32,25 @@
 #define Y2      3
 #define Y3      5
 #define Y4      6
-#define MAX_NODES 8
 
-
-//Set to false for production
 #define DEBUG   true
 
 //Keypad config
-const byte ROWS = 4; //four rows
-const byte COLS = 4; //four columns
-//define the symbols on the buttons of the keypads
+const byte ROWS = 4;
+const byte COLS = 4;
+//Define the symbols on the buttons of the keypads
 char hexaKeys[ROWS][COLS] = 
 {
   {'1','2','3','4'},
   {'5','6','7','8'},
-  {'U','N','N','N'},
-  {'D','L','R','S'}
+  {'S','S','S','U'},
+  {'L','R','S','D'}
 };
-byte rowPins[ROWS] = { Y1, Y2, Y3, Y4}; //connect to the row pinouts of the keypad
-byte colPins[COLS] = { X1, X2, X3, X4}; //connect to the column pinouts of the keypad
-Keypad myKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS); //initialize an instance of class NewKeypad
+byte rowPins[ROWS] = { Y1, Y2, Y3, Y4};
+byte colPins[COLS] = { X1, X2, X3, X4};
+
+//initialize an instance of class NewKeypad
+Keypad myKeypad = Keypad( makeKeymap(hexaKeys), rowPins, colPins, ROWS, COLS);
 
 //Holds the current node 
 int curNode = 0;
