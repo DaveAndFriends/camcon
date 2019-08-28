@@ -8,8 +8,7 @@
 #include <LoRa.h>
 #include <AccelStepper.h>
 
-const char NODE_ID = '1';      //ID of this reciever node (1-8)
-
+const char NODE_ID = '1';      //ID of this reciever node
 const long TILT_LIMIT = 100.0; //Limit for the tilt motor
 const long PAN_LIMIT = 512.0;  //Limit for the pan motor
 const float MTR_SPEED = 100.0; //Speed for both motors (recommend 25-300)
@@ -36,7 +35,7 @@ const float MTR_SPEED = 100.0; //Speed for both motors (recommend 25-300)
 
 #define STEPS_PER_REV 2048
 
-#define DEBUG true
+#define DEBUG false
 
 char newFunc;
 char curFunc;
@@ -46,11 +45,13 @@ AccelStepper tiltMtr(AccelStepper::FULL4WIRE, pin1Tilt, pin2Tilt, pin3Tilt, pin4
 
 void setup() {
   //Lora Setup
-  Serial.begin(9600);
-  Serial.println("LoRa Receiver");
+  if(DEBUG){
+    Serial.begin(9600);
+    Serial.println("LoRa Receiver");
+  }
   LoRa.setPins(SS,RST,DI0);
   if (!LoRa.begin(BAND,PABOOST )) {
-    Serial.println("Starting LoRa failed!");
+    if(DEBUG) Serial.println("Starting LoRa failed!");
     while (1);
   }
 

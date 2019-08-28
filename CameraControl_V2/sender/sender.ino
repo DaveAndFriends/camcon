@@ -7,8 +7,6 @@
 #include <Keypad.h>
 #include <SPI.h>
 #include <LoRa.h>
-#include <SoftwareSerial.h>
-#include <PacketSerial.h>
 
 //Max number of nodes
 #define MAX_NODES 8
@@ -33,7 +31,7 @@
 #define Y3      5
 #define Y4      6
 
-#define DEBUG   true
+#define DEBUG   false
 
 //Keypad config
 const byte ROWS = 4;
@@ -58,8 +56,10 @@ int curNode = 0;
 void setup()
 {
   //Serial init
-  Serial.begin(9600);
-  Serial.println("Serial initialzed");
+  if(DEBUG){
+    Serial.begin(9600);
+    Serial.println("Serial initialzed");
+  }
 
   //Keypad init
   myKeypad.setHoldTime(100);
@@ -68,7 +68,7 @@ void setup()
   //Lora Init
   LoRa.setPins(SS,RST,DI0);
   if (!LoRa.begin(BAND,PABOOST)) {
-    Serial.println("Starting LoRa failed!");
+    if(DEBUG) Serial.println("Starting LoRa failed!");
     while (1);
   }
 }
@@ -76,8 +76,6 @@ void setup()
 void loop()
 {
   readKey();
-
-  //delay(100);
 }
 
 void sendPacket(char function){
@@ -98,9 +96,10 @@ void readKey(){
   char curKey = myKeypad.getKey();
   
   if(curKey){
-    Serial.print("Current key: ");
-    Serial.println(curKey);
-
+    if(DEBUG){
+      Serial.print("Current key: ");
+      Serial.println(curKey);
+    }
     if(curKey>'0' && curKey<='8'){
       curNode=(curKey-48);
       if(DEBUG){
